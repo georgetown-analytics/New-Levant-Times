@@ -10,7 +10,7 @@ with open('data.csv','rb') as fin: # `with` statement available in 2.5+
     dr = csv.DictReader(fin) # comma is default delimiter
     to_db = [(i['searchid'], i['pub'], i['title'], i['edition']) for i in dr]
 
-cur.executemany("INSERT INTO t (searchid, pub, date, title, edition) VALUES ((i['searchid'], i['pub'], i['title'], i['edition']);", to_db)
+cur.executemany("INSERT INTO t (searchid, pub, date, title, edition) VALUES ((?, ?, ?, ?);", to_db)
 con.commit()
 con.close()
 
