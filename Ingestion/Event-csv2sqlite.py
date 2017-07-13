@@ -4,7 +4,6 @@ con = sqlite3.connect(":memory:")
 cur = con.cursor()
 cur.execute("CREATE TABLE Events (date, year, annot, event, source, url, severity);") # use your column names here
 
-
 with open('data.csv','rb') as fin: # `with` statement available in 2.5+ (data.csv is the data file)
     # csv.DictReader uses first line in file for column headings by default
     dr = csv.DictReader(fin) # comma is default delimiter
