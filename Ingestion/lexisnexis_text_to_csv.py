@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7.10
 # encoding: utf-8
 """
 split_ln.py
@@ -7,6 +7,7 @@ neal.caren@unc.edu
 Edited by Alex Hanna on 2015-01-29
 alex.hanna@gmail.com
 Edited by Gerhard Ottehenning on 2017-06-26
+otteheng@gmail.om
 Takes a downloaded plain text LexisNexis file and converts it into a CSV file or set of flat files.
 """
 
@@ -29,7 +30,7 @@ else:
     args.output = "."
 
 ## set permanent columns
-header = ['SEARCH_ID', 'PUBLICATION', 'DATE', 'TITLE', 'EDITION']
+header = ['SEARCH_ID', 'PUBLICATION', 'DATE', 'TITLE', 'EDITION', 'BYLINE']
 
 if args.sep == 'csv':
     ## use today as a hash to store
@@ -48,11 +49,10 @@ for fn in args.files:
     lnraw = open(fn).read()
 
     # silly hack to find the end of the documents
-    workfile = re.sub('                Copyright .*?\\r\\n', 'ENDOFILE', lnraw)
+    workfile = re.sub('\s+ Copyright .*?\\r\\n', 'ENDOFILE', lnraw)
 
     # clean up crud at the beginning of the file
     workfile = workfile.replace('\xef\xbb\xbf\r\n', '')
-
     # split the file into a list of documents
     workfile = workfile.split('ENDOFILE')
 
@@ -89,16 +89,50 @@ for fn in args.files:
         ## make metadata dict
         meta_dict = {k: '' for k in header}
 
-        doc_id = filessplit[0].strip().split(' ')[0]
-        pub = filessplit[1].strip()
-        date_ed = filessplit[2].strip()
-        title = filessplit[3].strip()
+        # When text files are appended the first article of the new batch loses the doc id.
+        # Unclear why it happens.
+        try:
+            if isinstance(int(filessplit[0].strip().split(' ')[0]), int):
+                doc_id = filessplit[0].strip().split(' ')[0]
+                pub = filessplit[1].strip()
+                date_ed = filessplit[2].strip()
+                title = filessplit[3].strip()
+        except ValueError:
+                doc_id = 1
+                pub = filessplit[0].strip()
+                date_ed = filessplit[1].strip()
+                title = filessplit[2].strip()
+
+        # Cycle through split file and find byline, section, and length
+        for word in range(3, 10):
+            try:
+                if "BYLINE:" in filessplit[word].strip():
+                    byline = filessplit[word].strip()
+                    byline = re.sub('BYLINE:', '', byline).strip()
+                elif "BYLINE:" not in filessplit[word].strip():
+                    byline = ''
+                if "SECTION:" in filessplit[word].strip():
+                    sec = filessplit[word].strip()
+                    sec = re.sub('SECTION:', '', sec).strip()
+                elif "SECTION:" not in filessplit[word].strip():
+                    sec = ''
+                if "LENGTH:" in filessplit[word].strip():
+                    length = filessplit[word].strip()
+                    length = re.sub('LENGTH:', '', length).strip()
+            except IndexError:
+                break
 
         ## format date into YYYY-MM-DD
-        da = date_ed.replace(',', '').split()
-        print "Da:", da
-        date = datetime.strptime(" ".join(da[0:3]), "%B %d %Y")
-        date = date.strftime("%Y-%m-%d")
+        try:
+            da = date_ed.replace(',', '').split()
+            date = datetime.strptime(" ".join(da[0:3]), "%B %d %Y")
+            date = date.strftime("%Y-%m-%d")
+        except ValueError:
+            doc_id = filessplit[0].strip().split(' ')[0]
+            pub = filessplit[1].strip()
+            date_ed = filessplit[3].strip()
+            title = filessplit[4].strip()
+
 
         ## format edition
         ## TK: maybe remove?
@@ -134,24 +168,27 @@ for fn in args.files:
         meta_dict['DATE'] = date
         meta_dict['TITLE'] = title
         meta_dict['EDITION'] = ed
+        meta_dict['SECTION'] = sec
+        meta_dict['BYLINE'] = byline
+        meta_dict['LENGTH'] = length
 
         if args.sep == 'csv':
-            ## add the text to the dict to write
+            # add the text to the dict to write
             meta_dict['TEXT'] = " ".join(paragraphs)
 
             # Output the results to a single csv file
             writer.writerow([meta_dict[x] for x in header])
         else:
-            ## otherwise, store as separate files
-            ## put each piece of meta info on a single line
+            # otherwise, store as separate files
+            ##put each piece of meta info on a single line
             out = "%s/%s_%s.txt" % (args.output, doc_id, date)
             fh = open(out, 'w')
 
-            ## write title and date first for separate files
+            # write title and date first for separate files
             fh.write('TITLE: %s\n' % meta_dict['TITLE'])
             fh.write('DATE: %s\n' % meta_dict['DATE'])
 
-            ## then write the rest
+            # then write the rest
             for k, v in meta_dict.iteritems():
                 if k not in ['TITLE', 'DICT']:
                     fh.write('%s: %s\n' % (k, v))
@@ -162,6 +199,8 @@ for fn in args.files:
             fh.close()
 
         print('Wrote %s' % doc_id)
+
+
 
 if args.sep == 'csv':
     outfile.close()
