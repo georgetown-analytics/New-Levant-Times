@@ -23,7 +23,9 @@ Available data sources
 	Wikipedia -  Timeline Data
 Data Science Pipeline Overview
  
+ 
 Ingestion
+
 	Collect the text and metadata for political articles from the New York Times and other news sources via LexisNexis with “Syria*” as the search term, published between 2009-2017. 
 
 	Collect records of diplomatic events from Wikipedia Timeline data as csv format from 2010-2017 to allow for forecasting of 2010-present events from newspaper data beginning in 2009.
@@ -33,10 +35,12 @@ Notes:
 	We transitioned to LexisNexis for collecting news articles since many newspaper APIs are no longer free to use
 	We are reducing the range of the years of diplomatic data to collect, since granular data by day/month/year (instead of year only) generally begins around 2010 
 
+
 Raw Data Storage
 
 	MongoDB - We are splitting and storing the LexisNexis news articles in Mongo prior to wrangling the data
 	SQLite – CSV files from Wikipedia Timeline data
+
 
 
 Munging and Wrangling 
@@ -49,11 +53,13 @@ Notes:
 	The newspaper articles are extracted into individual documents in MongoDB for wrangling and sentiment analysis. 
 	PDFs and other stores of diplomatic event data are processed. Diplomatic event data is rated by team members for severity (1,2,3)
 
+
 Computation and Analysis
 
 The Computations module rates (compiles) the news reports sentiment severity and compares against timing and severity of selected diplomatic events. 
 
 Tools: Python, NLTK, other tools TBD
+
 
 Forecasting Module 
 
