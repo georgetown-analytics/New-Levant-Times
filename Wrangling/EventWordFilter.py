@@ -63,8 +63,10 @@ for dip in diplowords:
 
 # Second Filter Terms
 # Add human-selected lower-case terms for a second filter. please maintain in alpha order.
-secondfilterwords = ['america', 'brit', 'e.u', 'emirat', 'franc', 'fren', 'iran', 'iraq', 'jordan', 'kurd',
-                     'league', 'leban', 'nation', 'russ', 'saudi', 'turk', 'u.a.e', 'u.s', 'u.k', 'united']
+secondfilterwords = ['america', 'brit', 'china', 'egypt', 'e.u', 'emirat', 'franc',
+                     'fren', 'iran', 'iraq', 'israel', 'jordan', 'kurd',
+                     'league', 'libya', 'leban', 'nation', 'oman', 'qatar',
+                     'russ', 'saudi', 'sudan', 'turk', 'u.a.e', 'u.s', 'u.k', 'united']
 
 # First Filter - BEGIN
 # read each event from the csv file output from SyrianTimeline_wikipedia.py
