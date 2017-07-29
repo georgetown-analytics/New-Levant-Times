@@ -8,8 +8,8 @@
 # DONE: Filter syrian events from csv of all events for first level
 # DONE: Filter output of first-level filter through second-level filter.
 # DONE: Write output of both filter levels to CSV files
-# TO DO: Generate unique event IDs in the prior step with SyrianTimeline_wikipedia.py
-# TO DO: create parsible dates using the Date and Year fields prior to this step
+# DONE: Generate unique event IDs in the prior step with SyrianTimeline_wikipedia.py
+# DONE: create parsible dates using the Date and Year fields prior to this step
 # DONE?: Error handling and status messages
 # Note: Second-level filter terms selected by manual review of output from EventWordCount.py
 
@@ -39,7 +39,7 @@ if os.path.isfile(csv_eventssecondlevel):
     os.remove(csv_eventssecondlevel)
 
 # Initialize our dataframe of events
-columns = ['EventNo', 'Date', 'Year', 'EventText', 'FilterWords', 'Level']
+columns = ['EventID', 'Date', 'Year', 'EventText', 'FilterWords', 'Level']
 ourdiploevents = pd.DataFrame(index=None, columns=columns)
 
 # First Filter Terms
@@ -81,7 +81,7 @@ with open('Syriantimelinefinal.csv', 'r') as csvfile:
             # write a row to the dataframe and move on to the next event desc
             if target in eventwords:
                 firstrelevantevents += 1
-                ourdiploevents = ourdiploevents.append({'EventNo': firstrelevantevents,
+                ourdiploevents = ourdiploevents.append({'EventID': row[7],
                                                         'Date': row[0],
                                                         'Year': row[1],
                                                         'EventText': row[3],
@@ -96,7 +96,7 @@ csvfile.close()
 print(firstrelevantevents, "total events caught by first filter.\n")
 
 # Convert the event number from a float to an integer
-ourdiploevents['EventNo'] = ourdiploevents['EventNo'].astype(int)
+ourdiploevents['EventID'] = ourdiploevents['EventID'].astype(int)
 # First Filter - END
 
 # Second Filter - BEGIN

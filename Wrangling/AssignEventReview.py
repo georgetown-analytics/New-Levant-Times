@@ -29,9 +29,9 @@ peoplelists = [
 reset = len(peoplelists)
 
 # Initialize our dataframes of assignments
-columns1 = ['EventNo', 'Date', 'Year', 'EventText', 'People']
+columns1 = ['EventID', 'Date', 'Year', 'EventText', 'People']
 df_all = pd.DataFrame(index=None, columns=columns1)
-columns2 = ['EventNo', 'Date', 'Year', 'EventText', 'Person']
+columns2 = ['EventID', 'Date', 'Year', 'EventText', 'Person']
 df_person = pd.DataFrame(index=None, columns=columns2)
 
 csv_allassignments = 'Events_AllAssignments.csv'
@@ -52,7 +52,7 @@ with open('Events_SecondLevel.csv', 'r') as csvfile:
         # calculate the index of the next combination from peoplelists
         index = assignmentrow % reset
 
-        df_all = df_all.append({'EventNo': row[0],
+        df_all = df_all.append({'EventID': row[0],
                                 'Date': row[1],
                                 'Year': row[2],
                                 'EventText': row[3],
@@ -70,7 +70,7 @@ print(assignmentrow, "total events assigned.\n")
 for i, assignment in df_all.iterrows():
     for person in personlist:
         if person in assignment['People']:
-            df_person = df_person.append({'EventNo': assignment['EventNo'],
+            df_person = df_person.append({'EventID': assignment['EventID'],
                                           'Date': assignment['Date'],
                                           'Year': assignment['Year'],
                                           'EventText': assignment['EventText'],

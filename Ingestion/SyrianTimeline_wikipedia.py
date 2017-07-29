@@ -9,12 +9,16 @@
 # DONE: Handle event descriptions in both p and li tags
 # DONE: Iterate through all timeline pages and scrape them
 # DONE: Write these data to one CSV file of all events
+# DONE: combine date data into DD-MM-YYYY format
+# DONE: Standardize event IDs
 # TO DO: Store footnote reference domain(s) for each event description
 # TO DO: Separately store the date spans and events that do not match the single day format, for human review
 # DONE?: Error handling and status messages
 
 
 import re
+import csv
+import string
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -23,11 +27,31 @@ import os
 # Wikipedia page containing links to all timeline pages
 Timeline_index_URL = 'https://en.wikipedia.org/wiki/Timeline_of_the_Syrian_Civil_War'
 
+monthdict = {'january': '01', 'february': '02', 'march': '03', 'april': '04', 'may': '05', 'june': '06',
+             'july': '07', 'august': '08', 'september': '09', 'october': '10',
+             'november': '11', 'december': '12'}
+
 csvname = 'Syriantimelinefinal.csv'
+
+def makedate(datestring, year):
+    daynumber = ''
+    monthnumber = ''
+    datestring = re.sub('[\+\-–]', ' ', datestring)
+    splitlist = datestring.split(' ')
+    for d in splitlist:
+        d = str(d).lower()
+        if d.isdigit():
+            daynumber = d
+            if len(daynumber) == 1:
+                daynumber = '0' + daynumber
+        if d in monthdict:
+            monthnumber = monthdict[d]
+    finaldate = monthnumber + '-' + daynumber + '-' + year
+    return finaldate
 
 ## Function scrapepage that does all of the processing of each timeline page - Begin
 
-def scrapepage(URLtoscrape, pagetype, csv_output_filename):
+def scrapepage(URLtoscrape, pagetype, eventbasenbr, csv_output_filename):
 
     # Get year from the URL
     URLyear = re.search('\d{4}', URLtoscrape)
@@ -60,6 +84,7 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
     ## Collect messages from Wikipedia regarding questionable information - End
 
     # Initialize lists of event dates, annotations and descriptions
+    eventid = []
     datelist = []
     annotationlist = []
     eventlist = []
@@ -87,6 +112,9 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
                     datetext = annotated_date.group('mydate')
                     annotationtext = annotated_date.group('annotation')
 
+                # put the date and year into the correct format
+                formatdate = makedate(datetext, EventYear)
+
                 # For this day, find and store the event description(s) from the next paragraph tag(s)
                 nextthing = item.find_next()
 
@@ -94,12 +122,14 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
                 # and not in the References section, store the date with each event description
                 while nextthing.name != "h3" and nextthing.name != "h4" and nextthing.text != "References":
                     if nextthing.name == "p" or nextthing.name == "li":
-                        datelist.append(datetext)
+                        datelist.append(formatdate)
                         annotationlist.append(annotationtext)
                         eventtext = nextthing.text
                         # Remove footnote number(s) in brackets from event description
                         eventtext = re.sub("\[\d+\]", "", eventtext)
                         eventlist.append(eventtext)
+                        eventid.append(eventbasenbr)
+                        eventbasenbr += 1
 
                     nextthing = nextthing.find_next()
 
@@ -110,6 +140,8 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
 
         # For each h3 on the page
         for item in datething:
+
+            datetext = ''
 
             # if the h3 contains a span with this class, start looking for the next li (list item) tag
             if item.find('span', class_='mw-headline'):
@@ -126,7 +158,8 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
                         # if there is not a nested list (ul) within this list item, process it as an event and store the date
                         if not findnextli.find('ul'):
                             if datetext:
-                                datelist.append(datetext)
+                                formatdate = makedate(datetext, EventYear)
+                                datelist.append(formatdate)
 
                             # get the event text. Remove the date, extra characters and footnote numbers
                             event = findnextli.text
@@ -135,6 +168,8 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
                                 eventtext = re.sub("^\W\s", "", eventtext)  # "^(\W*\s+)?"
                                 eventtext = re.sub("\[\d+\]", "", eventtext)
                                 eventlist.append(eventtext)
+                                eventid.append(eventbasenbr)
+                                eventbasenbr += 1
 
                                 # insert blank annotation entry
                                 annotationlist.append('')
@@ -151,9 +186,10 @@ def scrapepage(URLtoscrape, pagetype, csv_output_filename):
         datatable['Issue(s)'] = issuetext
         datatable['Source'] = soup.title.string
         datatable['Source URL'] = URLtoscrape
+        datatable['EventID'] = eventid
 
         # Print status message
-        print("Number of events for", datelist[0], "to", datelist[-1], EventYear, "=", len(eventlist))
+        print("Number of events for", datelist[0], "to", datelist[-1], "=", len(eventlist))
 
         # Write if csv file doesn't exist , or append if csv file exists already
         if not os.path.isfile(csv_output_filename):
@@ -187,6 +223,7 @@ indexsoup = BeautifulSoup(page.content, 'html.parser')
 # Initialize for the total number of events collected and pages scraped
 TotalEvents = 0
 PagesProcessed = 0
+eventlevelnbr = 1000
 
 # Find all of the a tags containing "Timeline of the Syrian Civil War..."
 # as link text so we can scrape each one for events
@@ -197,11 +234,12 @@ for item in indexthing:
         URLmeat = item.get('href')
         theURL = "https://en.wikipedia.org" + URLmeat
         if not (re.search("January–April 2011", item.text)):
-            URLEvents = scrapepage(theURL,"standard", csvname)
+            URLEvents = scrapepage(theURL,"standard", eventlevelnbr, csvname)
         else: # process January-April 2011 as non-standard event format
-            URLEvents = scrapepage(theURL, "non-standard", csvname)
+            URLEvents = scrapepage(theURL, "non-standard", eventlevelnbr, csvname)
         TotalEvents = TotalEvents + URLEvents
-        PagesProcessed +=1
+        PagesProcessed += 1
+        eventlevelnbr += 1000
 
 print("Total events collected =", TotalEvents, "from", PagesProcessed, "pages")
 
