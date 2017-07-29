@@ -4,10 +4,10 @@
 ![Sentiment](https://git.gitbook.com/raw/caiomsouza/u-tad-final-project/master/images/icon-sentiment.png?token=Y2Fpb21zb3V6YTo5YTllZmJhYi03NDg5LTQ4YTUtYThjMy05MDM2Yjc5ODgyMmM%3D)
 
 
-Predicting the Severity of Diplomatic Events 
+**Predicting the Severity of Diplomatic Events** 
 Georgetown Data Science – Predicting the Severity of Diplomatic Events Project - 2017
 
-Team Members:  Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah
+**Team Members:  Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah**
 
 Project Domain: Media and International Relations
 
