@@ -4,23 +4,25 @@
 ![Sentiment](https://git.gitbook.com/raw/caiomsouza/u-tad-final-project/master/images/icon-sentiment.png?token=Y2Fpb21zb3V6YTo5YTllZmJhYi03NDg5LTQ4YTUtYThjMy05MDM2Yjc5ODgyMmM%3D)
 
 
-**Predicting the Severity of Diplomatic Events** 
-Georgetown Data Science – Predicting the Severity of Diplomatic Events Project - 2017
+# **Predicting the Severity of Diplomatic Events** 
+*(Georgetown Data Science)*
+**New Levant Times**
 
-**Team Members:  Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah**
+> **Team Members:  Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah**
 
 Project Domain: Media and International Relations
 
 Problem/Hypothesis:
 
-	Use newspaper metadata and content to generate a sentiment analysis of media about specific countries. We are basing our analysis on Syria and Iran. 
+Use newspaper metadata and content to generate a sentiment analysis of media about specific countries. We are basing our analysis on Syria and Iran. 
 
 Hypothesis: The results of sentiment analysis of reporting on Syria and the additional countries will be predictive of diplomatic conflict.
 
 Available data sources
 
-	LexisNexis – aggregated source of APIs from several newspapers
-	Wikipedia -  Timeline Data
+	LexisNexis – aggregated source of APIs from several newspapers
+ Wikipedia -  Timeline Data
+ <br>
 Data Science Pipeline Overview
  
  
