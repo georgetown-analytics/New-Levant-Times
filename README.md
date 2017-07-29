@@ -6,16 +6,14 @@
 # **Predicting the Severity of Diplomatic Events** 
 **New Levant Times** *(Georgetown Data Science)*
 
-**Team Members: Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah**
-Project Domain: Media and International Relations
-Problem/Hypothesis:Use newspaper metadata and content to generate a sentiment analysis of media about specific countries. We are basing our analysis on Syria and Iran. 
-Hypothesis: The results of sentiment analysis of reporting on Syria and the additional countries will be predictive of diplomatic conflict.
+**Team Members: Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah** <br>
+- Project Domain: Media and International Relations
+- Problem/Hypothesis:Use newspaper metadata and content to generate a sentiment analysis of media about specific countries. We are basing our analysis on Syria and Iran. 
 
 **Available data sources**
 - LexisNexis – aggregated source of APIs from several newspapers
 - Wikipedia -  Timeline Data
  <br>
- 
 **Ingestion**
 Collect the text and metadata for political articles from the New York Times and other news sources via LexisNexis with “Syria*” as the search term, published between 2009-2017. <br>
 Collect records of diplomatic events from Wikipedia Timeline data as csv format from 2010-2017 to allow for forecasting of 2010-present events from newspaper data beginning in 2009.
