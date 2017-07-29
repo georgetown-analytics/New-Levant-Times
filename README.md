@@ -15,7 +15,7 @@
 - Wikipedia -  Timeline Data
  
 **Ingestion**
-Collect the text and metadata for political articles from the New York Times and other news sources via LexisNexis with “Syria*” as the search term, published between 2009-2017. <br>
+Collect the text and metadata for political articles from the New York Times and other news sources via LexisNexis with “Syria” as the search term, published between 2009-2017. <br>
 Collect records of diplomatic events from Wikipedia Timeline data as csv format from 2010-2017 to allow for forecasting of 2010-present events from newspaper data beginning in 2009.
 Tools: LexisNexis, Selenium, other tools TBD
 Notes: 
