@@ -1,45 +1,17 @@
 
-![gu](https://pbs.twimg.com/profile_images/1899483763/GU_AbbreviatedMark_twitter_normal.png)
-![python](https://www.python.org/static/favicon.ico)
-![Sentiment](https://git.gitbook.com/raw/caiomsouza/u-tad-final-project/master/images/icon-sentiment.png?token=Y2Fpb21zb3V6YTo5YTllZmJhYi03NDg5LTQ4YTUtYThjMy05MDM2Yjc5ODgyMmM%3D)
 
-# **Predicting the Severity of Diplomatic Events** 
+# **Predicting the Severity of Diplomatic Events During the Syrian Civil War** 
 **New Levant Times** *(Georgetown Data Science)*
 
 **Team Members: Melanie Huston, Carl Lofton, Gerhard Ottehenning, Makida W-Meskel, Michael Yamoah** <br>
 - Project Domain: Media and International Relations
-- Problem/Hypothesis:Use newspaper metadata and content to generate a sentiment analysis of media about specific countries. We are basing our analysis on Syria and Iran. 
+- Problem/Hypotheses: 1. Global newspaper content covering the Syrian Civil War can predict the severity of related diplomatic events. 2. Calculated features of the text including sentiment, publication type and region of publication will be comparably predictive to natural language features of the text.. 
 
 **Available data sources**
-- LexisNexis – aggregated source of APIs from several newspapers
-- Wikipedia -  Timeline Data
- 
-**Ingestion**
-Collect the text and metadata for political articles from the New York Times and other news sources via LexisNexis with “Syria” as the search term, published between 2009-2017. <br>
-Collect records of diplomatic events from Wikipedia Timeline data as csv format from 2010-2017 to allow for forecasting of 2010-present events from newspaper data beginning in 2009.
-Tools: LexisNexis, Selenium, other tools TBD
-Notes: 
+- LexisNexis – aggregated source of full text from several newspapers
+- Wikipedia -  Timeline data
 
-**Raw Data Storage**
-- Sqlite - We are splitting and storing the LexisNexis news articles and event data in SQLite prior to wrangling the data
-Munging and Wrangling 
-- Ensure that the data from news sources have been created into instances and are ready to be used in computations.
-Tools: SQLite, Python, other tools TBD
-- Notes: The newspaper articles are extracted into individual documents in MongoDB for wrangling and sentiment analysis. 
-PDFs and other stores of diplomatic event data are processed. Diplomatic event data is rated by team members for severity (1,2,3)
+**Abstract**
+How informative is news coverage of geopolitical conflicts? Can text analysis be used to predict important events before they unfold? The civil war in Syria has been a protracted and deadly conflict. The intensity and duration of the conflict has led to widespread news coverage from around the globe. We leveraged this to conduct two text analysis models: measuring the sentiment of news articles ex ante on events we classified, and alternatively, using machine learning to find which individual words were most predictive of the same classified events. The results from the former were mixed. Middle Eastern newspapers were most predictive but failed to outperform any other regions when we included days that we did not explicitly classify. The latter method was more promising. Tests on the complete article corpus yielded accurate classifications 60% of the time. 
 
-**Computation and Analysis**
-The Computations module rates (compiles) the news reports sentiment severity and compares against timing and severity of selected diplomatic events. 
-Tools: Python, NLTK, other tools TBD
-
-**Forecasting Module** 
-The forecasting module uses the computation results and statistically forecasts selected diplomatic events.
-Tools: Python, other tools TBD
-
-**Visualization**
-TBD
-Tools: Python, Tableau, other tools TBD
-
-**Future Analysis and Applications**
-Using Python machine learning libraries, several models will be trained over subsets of the collected data to effectively predict the severity of diplomatic events.
 
